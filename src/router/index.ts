@@ -41,14 +41,19 @@ const routes: Array<RouteConfig> = [
   {
     path: '/posts',
     name: 'posts',
+    component: () => import('../views/PostsPage.vue'),
+  },
+  {
+    path: '/my-posts',
+    name: 'my-posts',
     beforeEnter: function (to, from, next) {
-      if(!store.state.currentUser || !localStorage.getItem('currentPlauditUser')) {
+      if(!store.state.currentUser) {
         next('/login')
       } else {
         next()
       }
     } ,
-    component: () => import('../views/PostsPage.vue'),
+    component: () => import('../views/MyPostsPage.vue'),
   }
 ]
 

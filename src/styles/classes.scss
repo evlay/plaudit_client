@@ -1,0 +1,25 @@
+.log-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.log-form-container {
+    margin: 6.5rem auto;
+    box-shadow: $box-shadow-1;
+    border-radius: 0.25rem;
+    padding: 1.75rem;
+    width: 100%;
+}
+
+
+@media (min-width: 768px) {
+    .log-form {
+        width: 100%;
+    }
+
+    .log-form-container {
+        width: 80%;
+    }
+}
+

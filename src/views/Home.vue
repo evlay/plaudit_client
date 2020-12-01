@@ -1,9 +1,10 @@
 <template>
   <div class="home">
     <div id="hero-container">
-      <h2>
+      <h1>
         Welcome to Plaudit!
-      </h2>
+      </h1>
+      <p>Read, create, and upvote posts!</p>
     </div>
   </div>
 </template>
@@ -13,7 +14,12 @@ export default {}
 </script>
 
 <style lang="scss">
-h2 {
+
+.home {
+  font-size: 150%;
+}
+
+h1 {
   text-align: center;
   font-size: 200%;
 }
@@ -22,7 +28,7 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 30vh;
+  min-height: 40vh;
   flex-direction: column;
   // background: coral;
 }

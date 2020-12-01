@@ -1,25 +1,21 @@
 <template>
   <div class="posts-page">
     <div class="posts-title-container">
-      <h1>Posts</h1>
+      <h1>My Posts</h1>
       <button>
         <font-awesome-icon
           @click="fetchPosts"
           icon="sync"
           size="2x"
           class="fa-spin-hover"
-        ></font-awesome-icon>
-        <p class="fetch-post-container" v-if="fetchPostDone">Done!</p>
+        ></font-awesome-icon><p class="fetch-post-container" v-if="fetchPostDone">Done!</p>
       </button>
-      <button @click="showNewPostFormCheck" class="new-post-button">
+      <button  @click="showNewPostForm = true" class="new-post-button">
         New Post
       </button>
     </div>
     <div v-if="showNewPostForm" class="create-post-container">
-      <CreatePostForm
-        v-on:post-created="fetchPosts"
-        v-on:closeCreateForm="showNewPostForm = false"
-      ></CreatePostForm>
+      <CreatePostForm v-on:post-created="fetchPosts" v-on:closeCreateForm="showNewPostForm=false"></CreatePostForm>
     </div>
     <div class="posts-container">
       <ul v-for="post in posts" :key="post._id">
@@ -48,31 +44,32 @@ import CreatePostForm from '@/components/CreatePostForm.vue'
 export default {
   components: {
     Post,
-    CreatePostForm,
+    CreatePostForm
   },
   data() {
     return {
       posts: [],
       showNewPostForm: false,
       currentUser: localStorage.getItem('currentPlauditUser'),
-      fetchPostDone: false,
+      fetchPostDone: false
     }
   },
-  computed: {},
+  computed: {
+  },
   methods: {
     fetchPosts() {
       http
-        .get('/posts')
+        .get(`/posts/${this.$store.state.currentUser}`)
         .then((res) => {
           this.posts = res.data
           this.fetchPostDone = true
-          setTimeout(() => (this.fetchPostDone = false), 2000)
+          setTimeout(() => this.fetchPostDone = false, 2000)
         })
         .catch((err) => console.log(err))
     },
     initFetchPosts() {
       http
-        .get('/posts')
+        .get(`/posts/${this.$store.state.currentUser}`)
         .then((res) => {
           this.posts = res.data
           this.fetchPostDone = false
@@ -80,49 +77,31 @@ export default {
         .catch((err) => console.log(err))
     },
     upvotePost(event, id) {
-      if (!this.$store.state.currentUser) {
-        this.$router.push('/login')
-      } else {
-        http
-          .patch(`/posts/upvote/${id}`, {
-            username: this.$store.state.currentUser,
+    http.patch(`/posts/upvote/${id}`, {username: this.$store.state.currentUser})
+    .then(response => {
+      if(response.data == "user already upvoted this post") {
+        http.patch(`/posts/downvote/${id}`, {username: this.$store.state.currentUser})
+          .then(() => {
+            console.log('post downvoted')
           })
-          .then((response) => {
-            if (response.data == 'user already upvoted this post') {
-              http
-                .patch(`/posts/downvote/${id}`, {
-                  username: this.$store.state.currentUser,
-                })
-                .then(() => {
-                  console.log('post downvoted')
-                })
-                .catch((err) => console.log(err))
-            }
-            setTimeout(() => this.initFetchPosts(), 100)
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+          .catch(err => console.log(err))
       }
-    },
-    deletePost(event, id) {
-      http
-        .delete(`/posts/${id}`)
-        .then(() => {
-          console.log(`post deleted with id ${id}`)
-          this.fetchPosts()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    showNewPostFormCheck() {
-      if (!this.$store.state.currentUser) {
-        this.$router.push('/login')
-      } else {
-        this.showNewPostForm = true
-      }
-    },
+      setTimeout(() => this.initFetchPosts(), 100) 
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  },
+  deletePost(event, id){
+    http.delete(`/posts/${id}`)
+      .then(() => {
+        console.log(`post deleted with id ${id}`)
+        this.fetchPosts()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
   },
   mounted() {
     this.initFetchPosts()
@@ -154,16 +133,16 @@ export default {
     width: 100%;
 
     button:hover {
-      opacity: 0.9;
-      transition: opacity 0.1s;
+      opacity: .9;
+      transition: opacity .1s;
     }
   }
 
   .fetch-post-container {
-    color: $slate;
-    font-weight: 700;
-    margin-top: $rem-1;
-  }
+      color: $slate;
+      font-weight: 700;
+      margin-top: $rem-1;
+    }
 
   .fa-spin-hover {
     color: $slate;

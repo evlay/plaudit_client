@@ -1,12 +1,11 @@
 <template>
-  <div class="login-form-container">
-    <form id="login-form">
+  <div class="log-form-container">
+    <form id="login-form" class="log-form">
       <h2>Login</h2>
       <label for="Username">Username</label>
       <input v-focus id="login-form-username" v-model="loginUsername" type="text" />
       <label for="Password">Password</label>
       <input id="login-form-password" v-model="loginPassword" type="password" />
-
       <button @click.prevent="submitLoginForm">Submit</button>
       <div class="login-status-container">
         <p class="login-error">{{ loginError }}</p>
@@ -63,19 +62,12 @@ export default class LoginForm extends Vue {
 <style lang="scss">
 @import "../styles/colors";
 @import "../styles/utils";
+@import "../styles/classes";
 
-.login-form-container {
-  width: 60%;
-  margin: 6.5rem auto;
-  box-shadow: $box-shadow-1;
-  border-radius: 0.25rem;
-  padding: 1.75rem;
+.log-form-container {
 
   #login-form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-
+    
     label,
     input {
       margin-bottom: $rem-2;
@@ -131,6 +123,8 @@ export default class LoginForm extends Vue {
     .login-success {
       color: $forest;
     }
+
+
   }
 }
 </style>

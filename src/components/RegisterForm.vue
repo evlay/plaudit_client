@@ -1,6 +1,6 @@
 <template>
-  <div class="register-form-container">
-    <form id="register-form">
+  <div class="log-form-container">
+    <form id="register-form" class="log-form">
       <h2>Register</h2>
       <label for="Username">Username</label>
       <input
@@ -49,8 +49,11 @@ export default class RegisterForm extends Vue {
           password: this.registerPassword,
         })
         .then((response) => {
-          const msg = response.data;
-          this.registerError = msg;
+          if(response.data.username && response.data.password) {
+            this.registerSuccess = `User created with ${response.data.username}`
+          } else if(response.data == 'username already exist with that name') {
+            this.registerError = 'Username already exist with that name'
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -63,13 +66,14 @@ export default class RegisterForm extends Vue {
 <style lang="scss">
 @import "../styles/colors";
 @import "../styles/utils";
+@import "../styles/classes";
 
-.register-form-container {
-  width: 60%;
-  margin: 6.5rem auto;
-  box-shadow: $box-shadow-1;
-  border-radius: 0.25rem;
-  padding: 1.75rem;
+.log-form-container {
+  // width: 100%;
+  // margin: 6.5rem auto;
+  // box-shadow: $box-shadow-1;
+  // border-radius: 0.25rem;
+  // padding: 1.75rem;
 
   #register-form {
     display: flex;
