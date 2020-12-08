@@ -5,8 +5,16 @@
         <router-link class="nav-logo" to="/">Plaudit</router-link>
       </div>
       <font-awesome-icon
-          @click="showHamburgerMenu = !showHamburgerMenu"
+          @click="showHamburgerMenu = true"
+          v-if="!showHamburgerMenu"
           icon="bars"
+          size="2x"
+          class="hamburger-menu-btn"
+        />
+        <font-awesome-icon
+          @click="showHamburgerMenu = false"
+          v-if="showHamburgerMenu"
+          icon="times"
           size="2x"
           class="hamburger-menu-btn"
         />
@@ -15,8 +23,8 @@
       <router-link v-if="!currentUser" to="/register">Register</router-link>
       <router-link to="/posts">Posts</router-link>
       <router-link v-if="currentUser" to="/my-posts">My Posts</router-link>
-      <button v-if="currentUser" @click="logout">{{ currentUser }} logout ></button>
-      <button v-if="!currentUser"><router-link  to="/login">login ></router-link></button>
+      <button v-if="currentUser" @click="logout">Logout</button>
+      <button v-if="!currentUser"><router-link to="/login">Login</router-link></button>
       </div>
     </div>
     <div v-if="showHamburgerMenu" class="hamburger-menu">
@@ -24,8 +32,8 @@
       <router-link v-if="!currentUser" to="/register">Register</router-link>
       <router-link to="/posts">Posts</router-link>
       <router-link v-if="currentUser" to="/my-posts">My Posts</router-link>
-      <button v-if="currentUser" @click="logout">{{ currentUser }} logout ></button>
-      <router-link  to="/login">Login</router-link>
+      <a v-if="currentUser" @click="logout">Logout</a>
+      <router-link v-if="!currentUser" to="/login">Login</router-link>
       </div>
   </div>
 </template>
@@ -74,7 +82,7 @@ export default class Navbar extends Vue {
     border: none;
   }
 
-  button:hover{
+  a:hover{
     cursor: pointer
   }
 }
@@ -88,6 +96,8 @@ export default class Navbar extends Vue {
 
 .hamburger-menu-btn:hover {
   cursor: pointer;
+  opacity: .9;
+  transition: opacity .4s;
 }
 
 .nav-logo {
@@ -115,7 +125,7 @@ export default class Navbar extends Vue {
   justify-content: center;
   // background: coral;
   button {
-    width: 40%;
+    width: 20%;
   }
 
   a {
@@ -127,6 +137,10 @@ export default class Navbar extends Vue {
 @media only screen and (min-width: 800px) {
   .navbar-container {
     margin: 16px 32px;
+  }
+
+  .hamburger-menu {
+    display:none;
   }
 
   .hamburger-menu-btn {

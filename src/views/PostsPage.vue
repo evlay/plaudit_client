@@ -9,7 +9,7 @@
           size="2x"
           class="fa-spin-hover"
         ></font-awesome-icon>
-        <p class="fetch-post-container" v-if="fetchPostDone">Done!</p>
+        <p class="fetch-post-container">{{fetchStatus}}</p>
       </button>
       <button @click="showNewPostFormCheck" class="new-post-button">
         New Post
@@ -55,7 +55,7 @@ export default {
       posts: [],
       showNewPostForm: false,
       currentUser: localStorage.getItem('currentPlauditUser'),
-      fetchPostDone: false,
+      fetchStatus: ''
     }
   },
   computed: {},
@@ -77,7 +77,7 @@ export default {
           this.posts = res.data
           this.fetchPostDone = false
         })
-        .catch((err) => console.log(err))
+        .catch((err) => this.fetchStatus = err)
     },
     upvotePost(event, id) {
       if (!this.$store.state.currentUser) {

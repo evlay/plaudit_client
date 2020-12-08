@@ -90,6 +90,7 @@ export default {
     })
     .catch(error => {
       console.log(error)
+      
     })
   },
   deletePost(event, id){
@@ -104,7 +105,7 @@ export default {
   }
   },
   mounted() {
-    this.initFetchPosts()
+    this.fetchPosts()
   },
 }
 </script>

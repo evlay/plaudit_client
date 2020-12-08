@@ -56,7 +56,7 @@ export default class RegisterForm extends Vue {
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.registerError = err
         });
     }
   }

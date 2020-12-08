@@ -3,10 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSync, faWindowClose, faThumbsUp, faBars } from '@fortawesome/free-solid-svg-icons'
+import { faSync, faWindowClose, faThumbsUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faSync, faWindowClose, faThumbsUp, faBars)
+library.add(faSync, faWindowClose, faThumbsUp, faBars, faTimes)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

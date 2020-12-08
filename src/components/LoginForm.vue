@@ -3,7 +3,12 @@
     <form id="login-form" class="log-form">
       <h2>Login</h2>
       <label for="Username">Username</label>
-      <input v-focus id="login-form-username" v-model="loginUsername" type="text" />
+      <input
+        v-focus
+        id="login-form-username"
+        v-model="loginUsername"
+        type="text"
+      />
       <label for="Password">Password</label>
       <input id="login-form-password" v-model="loginPassword" type="password" />
       <button @click.prevent="submitLoginForm">Submit</button>
@@ -16,58 +21,59 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import http from "../utils/http-common";
+import { Vue, Component } from 'vue-property-decorator'
+import http from '../utils/http-common'
 
 @Component
 export default class LoginForm extends Vue {
-  private loginUsername = "";
-  private loginPassword = "";
-  private loginError = "";
-  private loginSuccess = "";
+  private loginUsername = ''
+  private loginPassword = ''
+  private loginError = ''
+  private loginSuccess = ''
 
   submitLoginForm() {
-    this.loginSuccess = "";
-    this.loginError = "";
+    this.loginSuccess = ''
+    this.loginError = ''
 
-    if (this.loginUsername === "" || this.loginPassword === "") {
-      this.loginError = "Username and password are required";
+    if (this.loginUsername === '' || this.loginPassword === '') {
+      this.loginError = 'Username and password are required'
     } else {
-      http
-        .post("/auth/login", {
-          username: this.loginUsername,
-          password: this.loginPassword,
-        })
-        .then((response) => {
-          if (response.data == true) {
-            this.loginSuccess = "Success!";
-            this.$store.commit("setUser", this.loginUsername);
-            this.$router.push("/posts");
-          } else {
-            this.loginError = "Incorrect email or password.";
-          }
-        })
-        .catch((err) => {
-          console.log(err.status);
-        });
+        http
+          .post('/auth/login', {
+            username: this.loginUsername,
+            password: this.loginPassword,
+          })
+          .then((response) => {
+            if (response.data.authToken) {
+              this.loginSuccess = 'Success!'
+              this.$store.commit('setUser', this.loginUsername)
+              this.$router.push('/posts')
+            } else if(response.data == 'Incorrect email or password.') {
+              this.loginError = 'Incorrect email or password.'
+              console.log(response)
+            } else {
+              this.loginError = "Unhandled login error"
+            } 
+          })
+          .catch((err) => {
+            this.loginError = err
+          })
     }
   }
 
   get getLoginSuccess() {
-    return this.loginSuccess;
+    return this.loginSuccess
   }
 }
 </script>
 
 <style lang="scss">
-@import "../styles/colors";
-@import "../styles/utils";
-@import "../styles/classes";
+@import '../styles/colors';
+@import '../styles/utils';
+@import '../styles/classes';
 
 .log-form-container {
-
   #login-form {
-    
     label,
     input {
       margin-bottom: $rem-2;
@@ -123,8 +129,6 @@ export default class LoginForm extends Vue {
     .login-success {
       color: $forest;
     }
-
-
   }
 }
 </style>

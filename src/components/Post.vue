@@ -43,8 +43,8 @@ export default class Post extends Vue {
 .post-container {
   flex-direction: column;
   min-width: 100%;
-  border: solid black 1px;
-  border-radius: $rem-2;
+  border-bottom: solid gray .5px;
+  // border-radius: $rem-2;
   padding: $rem-4;
   margin: $rem-2 0 0 0;
   color: $slate;
