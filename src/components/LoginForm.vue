@@ -15,8 +15,10 @@
       <div class="login-status-container">
         <p class="login-error">{{ loginError }}</p>
         <p class="login-success">{{ loginSuccess }}</p>
+        
       </div>
     </form>
+    <button @click="sendCookie">Send cookie</button>
   </div>
 </template>
 
@@ -31,6 +33,12 @@ export default class LoginForm extends Vue {
   private loginError = ''
   private loginSuccess = ''
 
+  sendCookie() {
+    http.get('/auth/cookie-test')
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
+  }
+
   submitLoginForm() {
     this.loginSuccess = ''
     this.loginError = ''
@@ -44,7 +52,7 @@ export default class LoginForm extends Vue {
             password: this.loginPassword,
           })
           .then((response) => {
-            if (response.data.authToken) {
+            if (response.data == `${this.loginUsername} successfully logged in`) {
               this.loginSuccess = 'Success!'
               this.$store.commit('setUser', this.loginUsername)
               this.$router.push('/posts')
@@ -53,6 +61,7 @@ export default class LoginForm extends Vue {
               console.log(response)
             } else {
               this.loginError = "Unhandled login error"
+              console.log(response)
             } 
           })
           .catch((err) => {
