@@ -6,7 +6,7 @@
         <font-awesome-icon icon="window-close" class="close-button" size="2x" />
       </button>
     </div>
-    <textarea v-model="postBody" name="" id="" cols="30" rows="10"></textarea>
+    <textarea v-focus v-model="postBody" name="" id="" cols="30" rows="10"></textarea>
     <button @click="createPostReq" class="submit-button">Submit</button>
     <div class="status-container">
       <p class="status-error">{{ createPostError }}</p>
@@ -16,23 +16,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import http from "../utils/http-common";
+import { Component, Vue } from "vue-property-decorator"
+import http from "../utils/http-common"
 
 @Component
 export default class CreatePostForm extends Vue {
-  private postBody = "";
-  private postUser = "";
-  private postCreatedOn = "";
-  private createPostError = "";
-  private createPostSuccess = "";
+  private postBody = ""
+  private postUser = ""
+  private postCreatedOn = ""
+  private createPostError = ""
+  private createPostSuccess = ""
 
   closeCreateForm() {
-    this.$emit("closeCreateForm");
+    this.$emit("closeCreateForm")
   }
 
   createdPost() {
-    this.$emit("post-created");
+    this.$emit("post-created")
   }
 
   createPostReq() {
@@ -40,24 +40,34 @@ export default class CreatePostForm extends Vue {
     this.createPostSuccess = ""
 
     if (this.postBody == "") {
-      this.createPostError = "You need to put something in the post!";
+      this.createPostError = "You need to put something in the post!"
     } else {
       http
-        .post("/posts", {
-          body: this.postBody,
-          username: this.$store.state.currentUser,
-        })
-        .then((
-          // res
-        ) => {
-          this.postBody = "";
-          this.createPostSuccess = "Post successfully submitted";
-          setTimeout(() => this.createPostSuccess = "", 5000)
+        .post(
+          "/posts",
+          {
+            body: this.postBody,
+            username: this.$store.state.currentUser,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(
+                "plauditAuthToken"
+              )}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res)
+          this.postBody = ""
+          this.createPostSuccess = "Post successfully submitted"
+          setTimeout(() => (this.createPostSuccess = ""), 5000)
           this.createdPost()
         })
         .catch((err) => {
-          this.createPostError = err;
-        });
+          this.createPostError = err
+          console.log("caught post creation")
+        })
     }
   }
 }

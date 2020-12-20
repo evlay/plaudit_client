@@ -5,11 +5,8 @@ import store from './store'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSync, faWindowClose, faThumbsUp, faBars, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import axios from 'axios';
-import VueAxios from 'vue-axios';
+// import interceptorSetup from './utils/interceptor'
 
-axios.defaults.withCredentials = true;
-Vue.use(VueAxios, axios);
 
 library.add(faSync, faWindowClose, faThumbsUp, faBars, faTimes)
 
@@ -25,6 +22,8 @@ Vue.directive('focus', {
 })
 
 Vue.config.productionTip = false
+
+// interceptorSetup()
 
 new Vue({
   router,

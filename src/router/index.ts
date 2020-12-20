@@ -41,6 +41,13 @@ const routes: Array<RouteConfig> = [
   {
     path: '/posts',
     name: 'posts',
+    beforeEnter: function (to, from, next) {
+      if(!store.state.currentUser) {
+        next('/login')
+      } else {
+        next()
+      }
+    },
     component: () => import('../views/PostsPage.vue'),
   },
   {

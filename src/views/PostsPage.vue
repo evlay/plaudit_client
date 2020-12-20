@@ -41,9 +41,9 @@
 </template>
 
 <script>
-import Post from '@/components/Post'
-import http from '@/utils/http-common'
-import CreatePostForm from '@/components/CreatePostForm.vue'
+import Post from "@/components/Post"
+import http from "@/utils/http-common"
+import CreatePostForm from "@/components/CreatePostForm.vue"
 
 export default {
   components: {
@@ -54,28 +54,29 @@ export default {
     return {
       posts: [],
       showNewPostForm: false,
-      currentUser: localStorage.getItem('currentPlauditUser'),
-      fetchStatus: '',
+      currentUser: localStorage.getItem("currentPlauditUser"),
+      fetchStatus: "",
     }
   },
   computed: {},
   methods: {
     fetchPosts() {
+      this.fetchStatus = ''
       http
-        .get('/posts')
+        .get("/posts")
         .then((res) => {
           this.posts = res.data
-          this.fetchPostDone = true
-          setTimeout(() => (this.fetchPostDone = false), 2000)
+          this.fetchStatus = 'Done'
+          setTimeout(() => (this.fetchStatus = ''), 2000)
         })
         .catch((err) => {
           this.fetchStatus = err
-          console.log(err)
+          setTimeout(() => (this.fetchStatus = ''), 5000)
         })
     },
     initFetchPosts() {
       http
-        .get('/posts')
+        .get("/posts")
         .then((res) => {
           this.posts = res.data
           this.fetchPostDone = false
@@ -84,20 +85,20 @@ export default {
     },
     upvotePost(event, id) {
       if (!this.$store.state.currentUser) {
-        this.$router.push('/login')
+        this.$router.push("/login")
       } else {
         http
           .patch(`/posts/upvote/${id}`, {
             username: this.$store.state.currentUser,
           })
           .then((response) => {
-            if (response.data == 'user already upvoted this post') {
+            if (response.data == "user already upvoted this post") {
               http
                 .patch(`/posts/downvote/${id}`, {
                   username: this.$store.state.currentUser,
                 })
                 .then(() => {
-                  console.log('post downvoted')
+                  console.log("post downvoted")
                 })
                 .catch((err) => console.log(err))
             }
@@ -110,7 +111,11 @@ export default {
     },
     deletePost(event, id) {
       http
-        .delete(`/posts/${id}`)
+        .delete(`/posts/${id}`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("plauditAuthToken"),
+          },
+        })
         .then(() => {
           console.log(`post deleted with id ${id}`)
           this.fetchPosts()
@@ -121,7 +126,7 @@ export default {
     },
     showNewPostFormCheck() {
       if (!this.$store.state.currentUser) {
-        this.$router.push('/login')
+        this.$router.push("/login")
       } else {
         this.showNewPostForm = true
       }
@@ -134,8 +139,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../styles/colors';
-@import '../styles/utils';
+@import "../styles/colors";
+@import "../styles/utils";
 
 .posts-page {
   button {

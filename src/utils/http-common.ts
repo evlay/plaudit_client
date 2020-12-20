@@ -1,9 +1,20 @@
 import axios from 'axios'
+import store from '../store'
 
-axios.defaults.withCredentials = true
 
-export default axios.create({
-  baseURL: `http://${process.env.VUE_APP_LOCAL_IP}:${process.env.VUE_APP_SERVER_PORT}`,
+const instance = axios.create({
+  baseURL: `http://localhost:3000`,
   headers: { 'Content-Type': 'application/json'}
-  
 })
+
+instance.interceptors.request.use(function(config) {
+  const token = localStorage.getItem('plauditAuthToken')
+  if(token) {
+      config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, function(err) {
+  return Promise.reject(err);
+});
+
+export default instance
