@@ -82,6 +82,7 @@ export default class Navbar extends Vue {
     border: none;
   }
 
+  button:hover, 
   a:hover{
     cursor: pointer
   }

@@ -61,17 +61,17 @@ export default {
   computed: {},
   methods: {
     fetchPosts() {
-      this.fetchStatus = ''
+      this.fetchStatus = ""
       http
         .get("/posts")
         .then((res) => {
           this.posts = res.data
-          this.fetchStatus = 'Done'
-          setTimeout(() => (this.fetchStatus = ''), 2000)
+          this.fetchStatus = "Done"
+          setTimeout(() => (this.fetchStatus = ""), 2000)
         })
-        .catch((err) => {
-          this.fetchStatus = err
-          setTimeout(() => (this.fetchStatus = ''), 5000)
+        .catch((error) => {
+          this.fetchStatus = error.response.data.message
+          setTimeout(() => (this.fetchStatus = ""), 5000)
         })
     },
     initFetchPosts() {
@@ -81,7 +81,10 @@ export default {
           this.posts = res.data
           this.fetchPostDone = false
         })
-        .catch((err) => (this.fetchStatus = err))
+        .catch((error) => {
+          this.fetchStatus = error.response.data.message
+          setTimeout(() => (this.fetchStatus = ""), 5000)
+        })
     },
     upvotePost(event, id) {
       if (!this.$store.state.currentUser) {

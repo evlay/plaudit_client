@@ -9,7 +9,7 @@
           size="2x"
           class="fa-spin-hover"
         ></font-awesome-icon>
-        <p class="fetch-post-container" v-if="fetchPostDone">Done!</p>
+        <p class="fetch-post-container">{{ fetchPostsStatus }}</p>
       </button>
       <button @click="showNewPostForm = true" class="new-post-button">
         New Post
@@ -56,38 +56,35 @@ export default {
       showNewPostForm: false,
       currentUser: localStorage.getItem("currentPlauditUser"),
       fetchPostDone: false,
+      fetchPostsStatus: ''
     }
   },
   computed: {},
   methods: {
     fetchPosts() {
       http
-        .get(`/posts/${this.$store.state.currentUser}`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("plauditAuthToken"),
-          },
-        })
+        .get(`/posts/${this.$store.state.currentUser}`)
         .then((res) => {
           this.posts = res.data
           this.fetchPostDone = true
           setTimeout(() => (this.fetchPostDone = false), 2000)
-          console.log('my posts fetched')
         })
-        .catch((err) => console.log(err))
+        .catch((error) => {
+          this.fetchPostsStatus = error.response.data.message
+          setTimeout(() => ( this.fetchPostsStatus = '' ), 5000)
+        })
     },
     initFetchPosts() {
       http
-        .get(`/posts/${this.$store.state.currentUser}`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("plauditAuthToken"),
-          },
-        })
+        .get(`/posts/${this.$store.state.currentUser}`)
         .then((res) => {
           this.posts = res.data
-          this.fetchPostDone = false
+          this.fetchPostsStatus = 'Done'
+          setTimeout(() => ( this.fetchPostsStatus = '' ), 5000)
         })
-        .catch((err) => {
-          console.error(err)
+        .catch((error) => {
+          this.fetchStatus = error.response.data.message
+          setTimeout(() => ( this.fetchStatus = '' ), 5000)
         })
     },
     upvotePost(event, id) {
@@ -143,6 +140,12 @@ export default {
 
   button:hover {
     cursor: pointer;
+  }
+
+  .fetch-post-container {
+    color: $slate;
+    font-weight: 700;
+    margin-top: $rem-1;
   }
 
   .posts-title-container {
