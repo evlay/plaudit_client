@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
+import http from '../utils/http-common'
+import { TokenService } from '../services/token.service'
 
 Vue.use(Vuex)
 
@@ -16,9 +18,12 @@ export default new Vuex.Store({
     },
     logout(state){
       state.currentUser = ''
-      localStorage.removeItem('currentPlauditUser')
-      localStorage.removeItem('plauditAuthToken')
-      localStorage.removeItem('plauditRefreshToken')
+      http.post('/auth/blacklist-refreshtoken', {
+        username: localStorage.getItem('currentPlauditUser'),
+        refreshToken: localStorage.getItem('plauditRefreshToken')
+      })
+        .then(results => console.log(results))
+        .catch(error => console.error(error))
       router.push('/login')
     }
   },
